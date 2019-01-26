@@ -1,0 +1,37 @@
+{
+  "name": "grpc-web-health-check",
+  "version": "0.0.0",
+  "preferGlobal": true,
+  "bin": {
+    "gwhc": "cli.js"
+  },
+  "scripts": {
+    "install": "npm run proto",
+    "proto": "scripts/generate_proto.sh",
+    "serve": "npm run --silent serve-with-trap",
+    "serve-with-trap": "trap 'docker stop $(docker ps --filter \"ancestor=envoyproxy/envoy:latest\" -q) >/dev/null' 2 && npm run serve:grpc-web && npm run serve:grpc",
+    "serve:grpc": "node --experimental-modules server.mjs",
+    "serve:grpc-web": "docker run -d --rm -it -p 50051:50051 --volume $PWD/proxy/envoy.yaml:/etc/envoy/envoy.yaml envoyproxy/envoy:latest",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "@grpc/proto-loader": "^0.4.0",
+    "finalhandler": "^1.1.1",
+    "google-protobuf": "^3.6.1",
+    "grpc": "^1.18.0",
+    "grpc-web": "^1.0.3",
+    "minimist": "^1.2.0",
+    "protobufjs": "^6.8.8",
+    "puppeteer": "^1.11.0",
+    "serve-static": "^1.13.2",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.2.2",
+    "webpack": "^4.28.4",
+    "webpack-node-externals": "^1.7.2"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.2.1"
+  }
+}
